@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "13592340490",
+    "project_id": "net-chat-firebase",
+    "storage_bucket": "net-chat-firebase.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:13592340490:android:dee6a78b4e70328e5997f3",
+        "android_client_info": {
+          "package_name": "com.example.net_chat_firebase"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA7dPsdbNtyI6m4bOzp2T_-GZQg6xoO2fc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
