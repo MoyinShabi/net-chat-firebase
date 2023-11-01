@@ -29,10 +29,13 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
   cupertino_icons: ^1.0.2
+  ficonsax: ^0.0.3
+  firebase_auth: ^4.12.0
   firebase_core: ^2.20.0
   flutter:
     sdk: flutter
   flutter_svg: ^2.0.8
+  toastification: ^1.0.2
 
 dev_dependencies:
   flutter_lints: ^2.0.0
