@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:net_chat_firebase/pages/chat_list_page.dart';
+import 'package:net_chat_firebase/pages/upload_photo_page.dart';
 import 'package:toastification/toastification.dart';
 
 import '../widgets/auth_button.dart';
@@ -58,6 +60,7 @@ class _AuthPageState extends State<AuthPage> {
         ScaffoldMessenger.of(context).clearSnackBars();
         toastification.show(
           context: context,
+          alignment: Alignment.bottomCenter,
           icon: const Icon(
             IconsaxBold.shield_tick,
             color: Color(0xFF00B2FF),
@@ -65,13 +68,18 @@ class _AuthPageState extends State<AuthPage> {
           type: ToastificationType.success,
           style: ToastificationStyle.flat,
           title: 'Logged in successfully!',
-          alignment: Alignment.topCenter,
           autoCloseDuration: const Duration(seconds: 3),
           showProgressBar: false,
           borderRadius: BorderRadius.circular(12.0),
           closeButtonShowType: CloseButtonShowType.none,
           closeOnClick: false,
           dragToClose: true,
+        );
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const ChatListPage(),
+          ),
         );
       } else {
         final userCredentials = await _firebase.createUserWithEmailAndPassword(
@@ -84,6 +92,7 @@ class _AuthPageState extends State<AuthPage> {
         ScaffoldMessenger.of(context).clearSnackBars();
         toastification.show(
           context: context,
+          alignment: Alignment.bottomCenter,
           icon: const Icon(
             IconsaxBold.shield_tick,
             color: Color(0xFF00B2FF),
@@ -91,13 +100,19 @@ class _AuthPageState extends State<AuthPage> {
           type: ToastificationType.success,
           style: ToastificationStyle.flat,
           title: 'Account created successfully!',
-          alignment: Alignment.bottomCenter,
           autoCloseDuration: const Duration(seconds: 3),
           showProgressBar: false,
           borderRadius: BorderRadius.circular(12.0),
           closeButtonShowType: CloseButtonShowType.none,
           closeOnClick: false,
           dragToClose: true,
+        );
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>
+                UploadPhotoPage(userCredentials: userCredentials),
+          ),
         );
       }
     } on FirebaseAuthException catch (error) {
@@ -223,7 +238,8 @@ class _AuthPageState extends State<AuthPage> {
                       validator: (text) {
                         // Regular expression to match a valid email address
                         final RegExp emailRegex = RegExp(
-                            r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
+                          r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
+                        );
                         if (text == null || text.isEmpty) {
                           return "Email address can't be empty";
                         }
@@ -239,16 +255,35 @@ class _AuthPageState extends State<AuthPage> {
                       keyboard: TextInputType.visiblePassword,
                       label: 'Password',
                       showVisibilityIcon: true,
-                      autovalidateMode: _validate
+                      /* autovalidateMode: _validate
                           ? AutovalidateMode.onUserInteraction
-                          : AutovalidateMode.disabled,
+                          : AutovalidateMode.disabled, */
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
                       validator: (text) {
+                        /* final lengthRegex = RegExp(r'^.{8,}$');
+                        final upperAndLowerCaseRegex =
+                            RegExp(r'^(?=.*[a-z])(?=.*[A-Z])');
+                        final numberRegex = RegExp(r'^(?=.*\d)');
+                        final specialCharacterRegex =
+                            RegExp(r'^(?=.*[@$!%*?&])'); */
                         if (text == null || text.isEmpty) {
                           return "Password can't be empty";
                         }
                         if (text.length < 6) {
                           return "Password must not be less than 6 characters";
                         }
+                        /* if (!lengthRegex.hasMatch(text)) {
+                          return "Password must not be less than 8 characters";
+                        }
+                        if (!upperAndLowerCaseRegex.hasMatch(text)) {
+                          return "Password must contain at least one uppercase and one lowercase letter";
+                        }
+                        if (!numberRegex.hasMatch(text)) {
+                          return "Password must contain at least one number";
+                        }
+                        if (!specialCharacterRegex.hasMatch(text)) {
+                          return "Password must contain at least one special character";
+                        } */
                         return null;
                       },
                     ),
@@ -353,6 +388,7 @@ class _AuthPageState extends State<AuthPage> {
                           onPressed: () {
                             setState(() {
                               _form.currentState!.reset();
+                              _isSubmitting = false;
                               _isLoginPage = !_isLoginPage;
                               _validate = false;
                               _usernameController.clear();
